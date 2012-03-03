@@ -49,12 +49,6 @@ fi
 # This helps our Windows users, while not bothering our Unix users.
 export GITFLOW_DIR=$(dirname "$(echo "$0" | sed -e 's,\\,/,g')")
 
-require_git_repo
-require_gitflow_initialized
-gitflow_load_settings
-VERSION_PREFIX=$(eval "echo `git config --get gitflow.prefix.versiontag`")
-PREFIX=$(git config --get gitflow.prefix.release)
-
 usage() {
 	echo "usage: git flow release [list] [-v]"
 	echo "       git flow release start [-F] <version> [<base>]"
@@ -87,6 +81,12 @@ main() {
 	SUBCOMMAND="release"
 
 	# run command
+  require_git_repo
+  require_gitflow_initialized
+  gitflow_load_settings
+  VERSION_PREFIX=$(eval "echo `git config --get gitflow.prefix.versiontag`")
+  PREFIX=$(git config --get gitflow.prefix.release)
+
 	FLAGS_PARENT="git $SUBCOMMAND"
 
 	# test if the first argument is a flag (i.e. starts with '-')

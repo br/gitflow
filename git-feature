@@ -1,3 +1,4 @@
+#!/bin/sh
 #
 # git-flow -- A collection of Git extensions to provide high-level
 # repository operations for Vincent Driessen's branching model.
@@ -36,6 +37,18 @@
 # policies, either expressed or implied, of Vincent Driessen.
 #
 
+# set this to workaround expr problems in shFlags on freebsd
+if uname -s | egrep -iq 'bsd'; then export EXPR_COMPAT=1; fi
+
+# enable debug mode
+if [ "$DEBUG" = "yes" ]; then
+	set -x
+fi
+
+# The sed expression here replaces all backslashes by forward slashes.
+# This helps our Windows users, while not bothering our Unix users.
+export GITFLOW_DIR=$(dirname "$(echo "$0" | sed -e 's,\\,/,g')")
+
 require_git_repo
 require_gitflow_initialized
 gitflow_load_settings
@@ -44,13 +57,56 @@ PREFIX=$(git config --get gitflow.prefix.feature)
 usage() {
 	echo "usage: git flow feature [list] [-v]"
 	echo "       git flow feature start [-F] <name> [<base>]"
-	echo "       git flow feature finish [-rFkD] [<name|nameprefix>]"
 	echo "       git flow feature publish <name>"
 	echo "       git flow feature track <name>"
 	echo "       git flow feature diff [<name|nameprefix>]"
 	echo "       git flow feature rebase [-i] [<name|nameprefix>]"
 	echo "       git flow feature checkout [<name|nameprefix>]"
 	echo "       git flow feature pull [-r] <remote> [<name>]"
+	echo "       git finish [-rFkD] [<name|nameprefix>]"
+}
+
+main() {
+	if [ $# -lt 1 ]; then
+		usage
+		exit 1
+	fi
+
+	# load common functionality
+	. "$GITFLOW_DIR/shFlags/src/shflags"
+
+	# This environmental variable fixes non-POSIX getopt style argument
+	# parsing, effectively breaking git-flow subcommand parsing on several
+	# Linux platforms.
+	export POSIXLY_CORRECT=1
+
+	# use the shFlags project to parse the command line arguments
+	. "$GITFLOW_DIR/gitflow-shFlags"
+	FLAGS_PARENT="git flow"
+	FLAGS "$@" || exit $?
+	eval set -- "${FLAGS_ARGV}"
+
+	# sanity checks
+	SUBCOMMAND="feature"
+
+	# run command
+	FLAGS_PARENT="git $SUBCOMMAND"
+
+	# test if the first argument is a flag (i.e. starts with '-')
+	# in that case, we interpret this arg as a flag for the default
+	# command
+	SUBACTION="default"
+	if [ "$1" != "" ] && { ! echo "$1" | grep -q "^-"; } then
+		SUBACTION="$1"; shift
+	fi
+	if ! type "cmd_$SUBACTION" >/dev/null 2>&1; then
+		warn "Unknown subcommand: '$SUBACTION'"
+		usage
+		exit 1
+	fi
+
+	# run the specified action
+	cmd_$SUBACTION "$@"
 }
 
 cmd_default() {
@@ -519,3 +575,5 @@ cmd_pull() {
 		echo "Created local branch $BRANCH based on $REMOTE's $BRANCH."
 	fi
 }
+
+main "$@"

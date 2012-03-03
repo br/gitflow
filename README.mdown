@@ -20,20 +20,6 @@ Or have a look at one of these screen casts:
 * [On the path with git-flow](http://codesherpas.com/screencasts/on_the_path_gitflow.mov) (by Dave Bock)
 
 
-Installing git-flow
--------------------
-See the Wiki for up-to-date [Installation Instructions](https://github.com/nvie/gitflow/wiki/Installation).
-
-
-Integration with your shell
----------------------------
-For those who use the [Bash](http://www.gnu.org/software/bash/) or
-[ZSH](http://www.zsh.org) shell, please check out the excellent work on the
-[git-flow-completion](http://github.com/bobthecow/git-flow-completion) project
-by [bobthecow](http://github.com/bobthecow). It offers tab-completion for all
-git-flow subcommands and branch names.
-
-
 FAQ
 ---
 See the [FAQ](http://github.com/nvie/gitflow/wiki/FAQ) section of the project

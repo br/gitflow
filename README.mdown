@@ -94,7 +94,7 @@ those questions to accept the (sane) default suggestions.
 The ``-d`` flag will accept all defaults.
 
 
-### Creating feature/release/hotfix/support branches
+### Creating feature/release/hotfix branches
 
 * To list/start/finish feature branches, use:
   
@@ -124,13 +124,6 @@ The ``-d`` flag will accept all defaults.
   		git flow hotfix finish <release>
   
   For hotfix branches, the `<base>` arg must be a commit on `master`.
-
-* To list/start support branches, use:
-  
-  		git flow support
-  		git flow support start <release> <base>
-  
-  For support branches, the `<base>` arg must be a commit on `master`.
 
 
 Showing your appreciation

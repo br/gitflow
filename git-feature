@@ -77,12 +77,10 @@ main() {
 
 	# use the shFlags project to parse the command line arguments
 	. "$GITFLOW_DIR/shFlags/src/shflags"
-	FLAGS_PARENT="git flow"
+	SUBCOMMAND="feature"
+	FLAGS_PARENT="git $SUBCOMMAND"
 	FLAGS "$@" || exit $?
 	eval set -- "${FLAGS_ARGV}"
-
-	# sanity checks
-	SUBCOMMAND="feature"
 
 	# run command
   require_git_repo
@@ -90,7 +88,6 @@ main() {
   gitflow_load_settings
   PREFIX=$(git config --get gitflow.prefix.feature)
 
-	FLAGS_PARENT="git $SUBCOMMAND"
 
 	# test if the first argument is a flag (i.e. starts with '-')
 	# in that case, we interpret this arg as a flag for the default

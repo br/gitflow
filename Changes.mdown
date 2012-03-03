@@ -5,10 +5,10 @@ Release date: **not yet**
 * `git flow init` now detects situations where origin already has gitflow
   branches set up, and behaves accordingly (thanks Emre Berge Ergenekon).
 
-* `git flow feature finish` can now be called without a feature branch
+* `git finish` can now be called without a feature branch
   name(prefix) argument and will finish the current branch, if on any.
 
-* `git flow feature pull` now has a `-r` flag, to support `pull --rebase`
+* `git feature pull` now has a `-r` flag, to support `pull --rebase`
   semantics (thanks Vedang Manerikar).
 
 * Various minor bug fixes related to internal argument passing.
@@ -40,12 +40,12 @@ Release date: **2010/10/18**
 * The flag parsing issues of git-flow subcommands are solved for most
   platforms.
 
-* `git flow {feature,hotfix,release} finish` now takes a `-k` flag, to keep the
+* `git finish` now takes a `-k` flag, to keep the
   branch around after finishing.
 
-* `git flow release finish` takes a `-n` flag, to skip tagging.
+* `git finish` takes a `-n` flag, to skip tagging.
 
-* For consistency, `git flow {release,hotfix}` now, too, have a `publish` and
+* For consistency, `git {release,hotfix}` now, too, have a `publish` and
   `track` subcommand, just like `feature`.
 
 * Various minor fixes.
@@ -55,7 +55,7 @@ Release date: **2010/10/18**
 ----
 Release date: **2010/07/22**
 
-* New subcommands for `git flow feature`:  
+* New subcommands for `git feature`:  
   - **checkout**:  
     For easily checking out features by their short name.  Even allows
     unique prefixes as arguments (see below).
@@ -69,15 +69,15 @@ Release date: **2010/07/22**
 * Easier addressing of branch names by using name prefixes.  
   For example, when using:  
   
-  	git flow feature finish fo
+  	git finish fo
   
   this automatically finishes the feature branch `foobar` if that's the only
   feature branch name starting with `fo`.
 
 * No force flag anymore for new feature branches  
-  `git flow feature start` lost its `-f` (force) flag.  You now don't
+  `git feature start` lost its `-f` (force) flag.  You now don't
   have to be in a clean repo anymore to start a new feature branch. This
-  avoids the manual `git stash`, `git flow feature start`, `git stash
+  avoids the manual `git stash`, `git feature start`, `git stash
   pop` cycle.
 
 * You can use `git-flow` in stand-alone repo's now.  

@@ -61,13 +61,13 @@ Fork the repository.  Then, run:
     cd gitflow
     git branch master origin/master
     git flow init -d
-    git flow feature start <your feature>
+    git feature start <your feature>
 
 Then, do work and commit your changes.  **Hint**: ``export PATH=`pwd`:$PATH``
 from within the gitflow directory makes sure you're using the version of
 gitflow you're currently developing.
 
-    git flow feature publish <your feature>
+    git feature publish <your feature>
 
 When done, open a pull request to your feature branch.
 
@@ -98,30 +98,30 @@ The ``-d`` flag will accept all defaults.
 
 * To list/start/finish feature branches, use:
   
-  		git flow feature
-  		git flow feature start <name> [<base>]
-  		git flow feature finish <name>
+  		git feature
+  		git feature start <name> [<base>]
+  		git finish <name>
   
   For feature branches, the `<base>` arg must be a commit on `develop`.
 
 * To push/pull a feature branch to the remote repository, use:
 
-  		git flow feature publish <name>
-		  git flow feature pull <remote> <name>
+  		git feature publish <name>
+		  git feature pull <remote> <name>
 
 * To list/start/finish release branches, use:
   
-  		git flow release
-  		git flow release start <release> [<base>]
-  		git flow release finish <release>
+  		git release
+  		git release start <release> [<base>]
+  		git finish <release>
   
   For release branches, the `<base>` arg must be a commit on `develop`.
   
 * To list/start/finish hotfix branches, use:
   
-  		git flow hotfix
-  		git flow hotfix start <release> [<base>]
-  		git flow hotfix finish <release>
+  		git hotfix
+  		git hotfix start <release> [<base>]
+  		git finish <release>
   
   For hotfix branches, the `<base>` arg must be a commit on `master`.
 

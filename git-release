@@ -54,7 +54,7 @@ usage() {
 	echo "       git release start [-F] <version> [<base>]"
 	echo "       git release publish <name>"
 	echo "       git release track <name>"
-	echo "       git finish [-Fsumpk] <version>"
+	echo "       git finish [-Fksump] <version>"
 }
 
 main() {

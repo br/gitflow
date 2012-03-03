@@ -58,7 +58,7 @@ usage() {
 	echo "       git feature rebase [-i] [<name|nameprefix>]"
 	echo "       git feature checkout [<name|nameprefix>]"
 	echo "       git feature pull [-r] <remote> [<name>]"
-	echo "       git finish [-rFkD] [<name|nameprefix>]"
+	echo "       git finish [-FkrD] [<name|nameprefix>]"
 }
 
 main() {

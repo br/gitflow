@@ -53,7 +53,7 @@ usage() {
 	echo "usage: git hotfix [list] [-v]"
 	echo "       git hotfix start [-F] <version> [<base>]"
 	echo "       git hotfix publish <version>"
-	echo "       git finish [-Fsumpk] <version>"
+	echo "       git finish [-Fksump] <version>"
 }
 main() {
 	if [ $# -lt 1 ]; then

@@ -50,14 +50,14 @@ fi
 export GITFLOW_DIR=$(dirname "$(echo "$0" | sed -e 's,\\,/,g')")
 
 usage() {
-	echo "usage: git flow feature [list] [-v]"
-	echo "       git flow feature start [-F] <name> [<base>]"
-	echo "       git flow feature publish <name>"
-	echo "       git flow feature track <name>"
-	echo "       git flow feature diff [<name|nameprefix>]"
-	echo "       git flow feature rebase [-i] [<name|nameprefix>]"
-	echo "       git flow feature checkout [<name|nameprefix>]"
-	echo "       git flow feature pull [-r] <remote> [<name>]"
+	echo "usage: git feature [list] [-v]"
+	echo "       git feature start [-F] <name> [<base>]"
+	echo "       git feature publish <name>"
+	echo "       git feature track <name>"
+	echo "       git feature diff [<name|nameprefix>]"
+	echo "       git feature rebase [-i] [<name|nameprefix>]"
+	echo "       git feature checkout [<name|nameprefix>]"
+	echo "       git feature pull [-r] <remote> [<name>]"
 	echo "       git finish [-rFkD] [<name|nameprefix>]"
 }
 

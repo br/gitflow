@@ -50,9 +50,9 @@ fi
 export GITFLOW_DIR=$(dirname "$(echo "$0" | sed -e 's,\\,/,g')")
 
 usage() {
-	echo "usage: git flow hotfix [list] [-v]"
-	echo "       git flow hotfix start [-F] <version> [<base>]"
-	echo "       git flow hotfix publish <version>"
+	echo "usage: git hotfix [list] [-v]"
+	echo "       git hotfix start [-F] <version> [<base>]"
+	echo "       git hotfix publish <version>"
 	echo "       git finish [-Fsumpk] <version>"
 }
 main() {

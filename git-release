@@ -50,10 +50,10 @@ fi
 export GITFLOW_DIR=$(dirname "$(echo "$0" | sed -e 's,\\,/,g')")
 
 usage() {
-	echo "usage: git flow release [list] [-v]"
-	echo "       git flow release start [-F] <version> [<base>]"
-	echo "       git flow release publish <name>"
-	echo "       git flow release track <name>"
+	echo "usage: git release [list] [-v]"
+	echo "       git release start [-F] <version> [<base>]"
+	echo "       git release publish <name>"
+	echo "       git release track <name>"
 	echo "       git finish [-Fsumpk] <version>"
 }
 

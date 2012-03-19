@@ -56,6 +56,7 @@ usage() {
 	echo "   feature   Manage your feature branches."
 	echo "   release   Manage your release branches."
 	echo "   hotfix    Manage your hotfix branches."
+  echo "   publish   Publish the current or named branch."
   echo "   finish    Finish the current or named branch."
 	echo
 	echo "Try 'git <major> help' for details."

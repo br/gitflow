@@ -56,11 +56,6 @@ usage() {
 }
 
 main() {
-	if [ $# -lt 1 ]; then
-		usage
-		exit 1
-	fi
-
 	# load common functionality
 	. "$GITFLOW_DIR/gitflow-common"
 
@@ -85,33 +80,24 @@ main() {
   HOTFIX_PREFIX=$(git config --get gitflow.prefix.hotfix)
   RELEASE_PREFIX=$(git config --get gitflow.prefix.release)
 
-	# test if the first argument is a flag (i.e. starts with '-')
-	# in that case, we interpret this arg as a flag for the default
-	# command
 	SUBACTION="default"
-	if [ "$1" != "" ] && { ! echo "$1" | grep -q "^-"; } then
-		SUBACTION="$1"; shift
-	fi
-	if ! type "cmd_$SUBACTION" >/dev/null 2>&1; then
-		warn "Unknown subcommand: '$SUBACTION'"
-		usage
-		exit 1
-	fi
 
 	# run the specified action
 	cmd_$SUBACTION "$@"
 }
 
 cmd_default() {
-	cmd_finish "$@"
+	cmd_feature_finish "$@"
 }
 
 cmd_feature_finish() {
+  PREFIX=$(git config --get gitflow.prefix.feature)
+
 	DEFINE_boolean fetch false "fetch from $ORIGIN before performing finish" F
 	DEFINE_boolean keep false "keep branch after performing finish" k
 	DEFINE_boolean rebase false "rebase instead of merge" r
 	DEFINE_boolean force_delete false "force delete feature branch after finish" D
-	parse_args "$@"
+	parse_feature_args "$@"
 	expand_nameprefix_arg_or_current
 
 	# sanity checks
@@ -466,5 +452,54 @@ cmd_release_finish() {
 	fi
 	echo
 }
+
+### for git flow feature
+use_current_feature_branch_name() {
+  local current_branch=$(git_current_branch)
+  if startswith "$current_branch" "$PREFIX"; then
+    BRANCH=$current_branch
+    NAME=${BRANCH#$PREFIX}
+  else
+    warn "The current HEAD is no feature branch."
+    warn "Please specify a <name> argument."
+    exit 1
+  fi
+}
+
+expand_nameprefix_arg() {
+  require_name_arg
+
+  local expanded_name
+  local exitcode
+  expanded_name=$(gitflow_resolve_nameprefix "$NAME" "$PREFIX")
+  exitcode=$?
+  case $exitcode in
+    0) NAME=$expanded_name
+       BRANCH=$PREFIX$NAME
+       ;;
+    *) exit 1 ;;
+  esac
+}
+
+expand_nameprefix_arg_or_current() {
+  if [ "$NAME" != "" ]; then
+    expand_nameprefix_arg
+    require_branch "$PREFIX$NAME"
+  else
+    use_current_feature_branch_name
+  fi
+}
+
+parse_feature_args() {
+  # parse options
+  FLAGS "$@" || exit $?
+  eval set -- "${FLAGS_ARGV}"
+
+  # read arguments into global variables
+  NAME=$1
+  BRANCH=$PREFIX$NAME
+}
+
+### end git flow feature
 
 main "$@"

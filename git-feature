@@ -52,12 +52,12 @@ export GITFLOW_DIR=$(dirname "$(echo "$0" | sed -e 's,\\,/,g')")
 usage() {
 	echo "usage: git feature [list] [-v]"
 	echo "       git feature start [-F] <name> [<base>]"
-	echo "       git feature publish <name>"
 	echo "       git feature track <name>"
 	echo "       git feature diff [<name|nameprefix>]"
 	echo "       git feature rebase [-i] [<name|nameprefix>]"
 	echo "       git feature checkout [<name|nameprefix>]"
 	echo "       git feature pull [-r] <remote> [<name>]"
+	echo "       git publish <name>"
 	echo "       git finish [-FkrD] [<name|nameprefix>]"
 }
 
@@ -277,33 +277,6 @@ cmd_start() {
 	echo "Now, start committing on your feature. When done, use:"
 	echo ""
 	echo "     git flow feature finish $NAME"
-	echo
-}
-
-cmd_publish() {
-	parse_args "$@"
-  expand_nameprefix_arg_or_current
-
-	# sanity checks
-	require_clean_working_tree
-	require_branch "$BRANCH"
-	git fetch -q "$ORIGIN"
-	require_branch_absent "$ORIGIN/$BRANCH"
-
-	# create remote branch
-	git push "$ORIGIN" "$BRANCH:refs/heads/$BRANCH"
-	git fetch -q "$ORIGIN"
-
-	# configure remote tracking
-	git config "branch.$BRANCH.remote" "$ORIGIN"
-	git config "branch.$BRANCH.merge" "refs/heads/$BRANCH"
-	git checkout "$BRANCH"
-
-	echo
-	echo "Summary of actions:"
-	echo "- A new remote branch '$BRANCH' was created"
-	echo "- The local branch '$BRANCH' was configured to track the remote branch"
-	echo "- You are now on branch '$BRANCH'"
 	echo
 }
 

@@ -52,8 +52,8 @@ export GITFLOW_DIR=$(dirname "$(echo "$0" | sed -e 's,\\,/,g')")
 usage() {
 	echo "usage: git release [list] [-v]"
 	echo "       git release start [-F] <version> [<base>]"
-	echo "       git release publish <name>"
 	echo "       git release track <name>"
+	echo "       git publish <name>"
 	echo "       git finish [-Fksump] <version>"
 }
 
@@ -234,33 +234,6 @@ cmd_start() {
 	echo "- When done, run:"
 	echo
 	echo "     git flow release finish '$VERSION'"
-	echo
-}
-
-cmd_publish() {
-	parse_args "$@"
-	require_version_arg
-
-	# sanity checks
-	require_clean_working_tree
-	require_branch "$BRANCH"
-	git fetch -q "$ORIGIN"
-	require_branch_absent "$ORIGIN/$BRANCH"
-
-	# create remote branch
-	git push "$ORIGIN" "$BRANCH:refs/heads/$BRANCH"
-	git fetch -q "$ORIGIN"
-
-	# configure remote tracking
-	git config "branch.$BRANCH.remote" "$ORIGIN"
-	git config "branch.$BRANCH.merge" "refs/heads/$BRANCH"
-	git checkout "$BRANCH"
-
-	echo
-	echo "Summary of actions:"
-	echo "- A new remote branch '$BRANCH' was created"
-	echo "- The local branch '$BRANCH' was configured to track the remote branch"
-	echo "- You are now on branch '$BRANCH'"
 	echo
 }
 

@@ -53,7 +53,7 @@ Then, do work and commit your changes.  **Hint**: ``export PATH=`pwd`:$PATH``
 from within the gitflow directory makes sure you're using the version of
 gitflow you're currently developing.
 
-    git feature publish <your feature>
+    git publish <your feature>
 
 When done, open a pull request to your feature branch.
 
@@ -92,7 +92,7 @@ The ``-d`` flag will accept all defaults.
 
 * To push/pull a feature branch to the remote repository, use:
 
-  		git feature publish <name>
+  		git publish <name>
 		  git feature pull <remote> <name>
 
 * To list/start/finish release branches, use:

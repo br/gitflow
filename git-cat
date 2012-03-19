@@ -1,0 +1,4 @@
+#!/bin/bash -e
+
+# from http://michaelgoerz.net/blog/2009/10/three-little-git-scripts/
+git cat-file -p $(git ls-tree "$1" "$2" | awk '{print $3}')

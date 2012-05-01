@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #
 # git-flow -- A collection of Git extensions to provide high-level
 # repository operations for Vincent Driessen's branching model.
@@ -37,38 +37,39 @@
 # policies, either expressed or implied, of Vincent Driessen.
 #
 
+#/ NAME
+#/     git flow feature -- 
+#/
+#/ SYNOPSIS
+#/     git feature [list] [-v]"
+#/     git feature start [-F] <name> [<base>]"
+#/     git feature track <name>"
+#/     git feature diff [<name|nameprefix>]"
+#/     git feature rebase [-i] [<name|nameprefix>]"
+#/     git feature checkout [<name|nameprefix>]"
+#/     git feature pull [-r] <remote> [<name>]"
+#/     git publish <name>"
+#/     git finish [-FkrD] [<name|nameprefix>]"
+
+# figure out the project root under which bin, lib live
+shome="$(cd -P -- "$(dirname -- "$0")/.." && pwd -P)"
+
+# load a meat library
+source "$shome/bin/_prime" "$@"
+
 # set this to workaround expr problems in shFlags on freebsd
 if uname -s | egrep -iq 'bsd'; then export EXPR_COMPAT=1; fi
 
-# enable debug mode
-if [ "$DEBUG" = "yes" ]; then
-	set -x
-fi
-
-# The sed expression here replaces all backslashes by forward slashes.
-# This helps our Windows users, while not bothering our Unix users.
-export GITFLOW_DIR=$(dirname "$(echo "$0" | sed -e 's,\\,/,g')")
-
-usage() {
-	echo "usage: git feature [list] [-v]"
-	echo "       git feature start [-F] <name> [<base>]"
-	echo "       git feature track <name>"
-	echo "       git feature diff [<name|nameprefix>]"
-	echo "       git feature rebase [-i] [<name|nameprefix>]"
-	echo "       git feature checkout [<name|nameprefix>]"
-	echo "       git feature pull [-r] <remote> [<name>]"
-	echo "       git publish <name>"
-	echo "       git finish [-FkrD] [<name|nameprefix>]"
-}
+export GITFLOW_DIR="$shome"
 
 main() {
 	if [ $# -lt 1 ]; then
-		usage
+		display_help
 		exit 1
 	fi
 
 	# load common functionality
-	. "$GITFLOW_DIR/gitflow-common"
+  require 'gitflow'
 
 	# This environmental variable fixes non-POSIX getopt style argument
 	# parsing, effectively breaking git-flow subcommand parsing on several
@@ -76,11 +77,10 @@ main() {
 	export POSIXLY_CORRECT=1
 
 	# use the shFlags project to parse the command line arguments
-	. "$GITFLOW_DIR/shFlags/src/shflags"
 	SUBCOMMAND="feature"
 	FLAGS_PARENT="git $SUBCOMMAND"
-	FLAGS "$@" || exit $?
-	eval set -- "${FLAGS_ARGV}"
+  parse_command_line "$@" || exit $?
+  eval set -- "${FLAGS_ARGV}"
 
 	# run command
   require_git_repo
@@ -97,8 +97,8 @@ main() {
 		SUBACTION="$1"; shift
 	fi
 	if ! type "cmd_$SUBACTION" >/dev/null 2>&1; then
-		warn "Unknown subcommand: '$SUBACTION'"
-		usage
+		logger_warn "Unknown subcommand: '$SUBACTION'"
+		display_help
 		exit 1
 	fi
 
@@ -119,12 +119,12 @@ cmd_list() {
 	local short_names
 	feature_branches=$(echo "$(git_local_branches)" | grep "^$PREFIX")
 	if [ -z "$feature_branches" ]; then
-		warn "No feature branches exist."
-		warn ""
-		warn "You can start a new feature branch:"
-		warn ""
-		warn "    git flow feature start <name> [<base>]"
-		warn ""
+		logger_warn "No feature branches exist."
+		logger_warn ""
+		logger_warn "You can start a new feature branch:"
+		logger_warn ""
+		logger_warn "    git flow feature start <name> [<base>]"
+		logger_warn ""
 		exit 0
 	fi
 	current_branch=$(git branch --no-color | grep '^\* ' | grep -v 'no branch' | sed 's/^* //g')
@@ -169,14 +169,14 @@ cmd_list() {
 }
 
 cmd_help() {
-	usage
+	display_help
 	exit 0
 }
 
 require_name_arg() {
 	if [ "$NAME" = "" ]; then
-		warn "Missing argument <name>"
-		usage
+		logger_warn "Missing argument <name>"
+		display_help
 		exit 1
 	fi
 }
@@ -202,8 +202,8 @@ use_current_feature_branch_name() {
 		BRANCH=$current_branch
 		NAME=${BRANCH#$PREFIX}
 	else
-		warn "The current HEAD is no feature branch."
-		warn "Please specify a <name> argument."
+		logger_warn "The current HEAD is no feature branch."
+		logger_warn "Please specify a <name> argument."
 		exit 1
 	fi
 }
@@ -337,7 +337,7 @@ cmd_rebase() {
 	DEFINE_boolean interactive false 'do an interactive rebase' i
 	parse_args "$@"
 	expand_nameprefix_arg_or_current
-	warn "Will try to rebase '$NAME'..."
+	logger_warn "Will try to rebase '$NAME'..."
 	require_clean_working_tree
 	require_branch "$BRANCH"
 
@@ -352,8 +352,8 @@ cmd_rebase() {
 avoid_accidental_cross_branch_action() {
 	local current_branch=$(git_current_branch)
 	if [ "$BRANCH" != "$current_branch" ]; then
-		warn "Trying to pull from '$BRANCH' while currently on branch '$current_branch'."
-		warn "To avoid unintended merges, git-flow aborted."
+		logger_warn "Trying to pull from '$BRANCH' while currently on branch '$current_branch'."
+		logger_warn "To avoid unintended merges, git-flow aborted."
 		return 1
 	fi
 	return 0
@@ -389,7 +389,7 @@ cmd_pull() {
 		# remote changes in
 		if flag rebase; then
 			if ! git pull --rebase -q "$REMOTE" "$BRANCH"; then
-				warn "Pull was aborted. There might be conflicts during rebase or '$REMOTE' might be inaccessible."
+				logger_warn "Pull was aborted. There might be conflicts during rebase or '$REMOTE' might be inaccessible."
 				exit 1
 			fi
 		else

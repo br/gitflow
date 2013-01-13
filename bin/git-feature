@@ -55,7 +55,7 @@
 shome="$(cd -P -- "$(dirname -- "$BASH_SOURCE")/.." && pwd -P)"
 
 # load a meat library
-source "$shome/bin/_treadstone"
+source "$shome/libexec/_jason"
 
 # set this to workaround expr problems in shFlags on freebsd
 if uname -s | egrep -iq 'bsd'; then export EXPR_COMPAT=1; fi

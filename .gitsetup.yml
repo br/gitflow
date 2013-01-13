@@ -1,0 +1,6 @@
+---
+remotes:
+  vendor: https://github.com/nvie/gitflow
+  primary: git@github.com:destructuring/gitflow
+  secondary: git@bitbucket.org:destructuring/gitflow
+  sh: https://github.com/destructuring/jason
